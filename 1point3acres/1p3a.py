@@ -4,7 +4,7 @@ import re
 from http.cookies import SimpleCookie
 from datetime import date
 
-from .local_settings import username, raw_cookies
+from local_settings import username, raw_cookies
 
 
 def login_with_cookies(username, raw_cookies):
