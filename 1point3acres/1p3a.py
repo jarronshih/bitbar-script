@@ -19,15 +19,15 @@ def login_with_cookies(username, raw_cookies):
         cookies.load(raw_cookies)
         result = session_requests.get(main_url, cookies={k: v.value for k, v in cookies.items()})
         content = result.text
-    except Exception as e:
-        pass
 
-    if username in result.text:
+        if username not in result.text:
+            return None
+
         m = re.findall(r'积分: (\d+)', content)
         point = m[0]
         return int(point)
 
-    else:
+    except Exception as e:
         return None
 
 
