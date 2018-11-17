@@ -15,8 +15,8 @@ copy from browser after login
 The refresh time is in the filename of the plugin, following this format: `{name}.{time}.{ext}`
 
 ```bash
-ln -s <folder>/1point3acres/1p3a.py 1p3a.24h.py
+ln -s <folder>/1point3acres/run.sh 1p3a.24h.sh
 ```
 
 ## Ensure you have execution rights
-Ensure the plugin is executable by running `chmod +x 1p3a.24h.py`.
+Ensure the plugin is executable by running `chmod +x 1p3a.24h.sh`.
