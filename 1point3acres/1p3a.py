@@ -1,15 +1,19 @@
 #!/usr/bin/env PYTHONIOENCODING=UTF-8 /usr/local/bin/python3
 import requests
 import re
+import base64
+from bs4 import BeautifulSoup
 from http.cookies import SimpleCookie
 from datetime import date
-
+from urllib.parse import urljoin
 from local_settings import username, raw_cookies
+
+
+main_url = 'https://www.1point3acres.com/bbs/'
 
 
 def login_with_cookies(username, raw_cookies):
     # Utils
-    main_url = 'https://www.1point3acres.com/bbs/'
     session_requests = requests.session()
 
     # Login with cookies
@@ -25,7 +29,12 @@ def login_with_cookies(username, raw_cookies):
 
         m = re.findall(r'积分: (\d+)', content)
         point = m[0]
-        return int(point)
+
+        soup = BeautifulSoup(result.text, features="html.parser")
+        a = soup.find('a', href="plugin.php?id=ahome_dayquestion:index")
+        image_url = a.img.attrs['src']
+        image_base64 = base64.b64encode(session_requests.get(urljoin(main_url, image_url)).content)
+        return int(point), image_base64
 
     except Exception as e:
         return None
@@ -33,7 +42,7 @@ def login_with_cookies(username, raw_cookies):
 
 # Info
 now = date.today()
-point = login_with_cookies(username, raw_cookies)
+point, image_base64 = login_with_cookies(username, raw_cookies)
 
 if point is None:
     print(f'[1point] x')
@@ -43,3 +52,4 @@ else:
     print(f'[1point] {point}')
     print('---')
     print(f'{now.isoformat()} ')
+    print(f'| image={image_base64.decode("utf-8")} href={main_url}')
