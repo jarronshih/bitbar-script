@@ -7,49 +7,60 @@ from http.cookies import SimpleCookie
 from datetime import date
 from urllib.parse import urljoin
 from local_settings import username, raw_cookies
+from dataclasses import dataclass
 
 
-main_url = 'https://www.1point3acres.com/bbs/'
+MAIN_URL = 'https://www.1point3acres.com/bbs/'
+
+
+@dataclass
+class Profile:
+    username: str = ''
+    point: int = 0
+    day_question: bytes = bytes()
 
 
 def login_with_cookies(username, raw_cookies):
     # Utils
     session_requests = requests.session()
+    profile = None
 
     # Login with cookies
     content = ''
     try:
         cookies = SimpleCookie()
         cookies.load(raw_cookies)
-        result = session_requests.get(main_url, cookies={k: v.value for k, v in cookies.items()})
+        result = session_requests.get(MAIN_URL, cookies={k: v.value for k, v in cookies.items()})
         content = result.text
 
         if username not in result.text:
             return None
 
+        profile = Profile()
         m = re.findall(r'积分: (\d+)', content)
-        point = m[0]
+        profile.point = int(m[0])
 
         soup = BeautifulSoup(result.text, features="html.parser")
         a = soup.find('a', href="plugin.php?id=ahome_dayquestion:index")
         image_url = a.img.attrs['src']
-        image_base64 = base64.b64encode(session_requests.get(urljoin(main_url, image_url)).content)
-        return int(point), image_base64
+        profile.day_question = base64.b64encode(session_requests.get(urljoin(MAIN_URL, image_url)).content)
+        return profile
 
     except Exception as e:
-        return None
+        print(e)
+        return profile
 
 
 # Info
 now = date.today()
-point, image_base64 = login_with_cookies(username, raw_cookies)
+profile = login_with_cookies(username, raw_cookies)
 
-if point is None:
+if profile is None:
     print(f'[1point] x')
     print('---')
     print(f'{now.isoformat()} ')
 else:
-    print(f'[1point] {point}')
+    print(f'[1point] {profile.point}')
     print('---')
     print(f'{now.isoformat()} ')
-    print(f'| image={image_base64.decode("utf-8")} href={main_url}')
+    print(f'| image={profile.day_question.decode("utf-8")} href={MAIN_URL}')
