@@ -42,6 +42,8 @@ def login_with_cookies(username, raw_cookies):
 
         soup = BeautifulSoup(result.text, features="html.parser")
         a = soup.find('a', href="plugin.php?id=ahome_dayquestion:index")
+        if not a:
+            a = soup.find('a', onclick="showWindow('pop','plugin.php?id=ahome_dayquestion:pop')")
         image_url = a.img.attrs['src']
         profile.day_question = base64.b64encode(session_requests.get(urljoin(MAIN_URL, image_url)).content)
         return profile
