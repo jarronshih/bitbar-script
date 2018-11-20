@@ -51,20 +51,22 @@ def login_with_cookies(username, raw_cookies):
         return profile
 
     except Exception as e:
-        print(e)
+        # print(e)
         return profile
 
 
 # Info
 now = date.today()
 profile = login_with_cookies(username, raw_cookies)
+icon_b64 = """
+AAABAAEAEBAAAAAAAABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A0qIA/9KiAP/s2JRq0qIA/9KiAP/duD7A////AP///wD///8A////AP///wD///8A////AP///wD///8A7NiUatKiAP////8A0qIA/9KiAP/SogD/0qIA/////wD///8A////AP///wD///8A////AP///wD///8A////ANKiAP/SogD/////ANKiAP/SogD/0qIA/9KiAP/SogD/////AP///wD///8A////AP///wD///8A////AP///wDSogD/0qIA/////wDgwFSq0qIA/9KiAP////8A0qIA/9KiAP////8A////AP///wD///8A////AP///wD///8A0qIA/9KiAP/SogD/0qIA/9KiAP/SogD/////AP///wDSogD/0qIA/////wD///8A////AP///wD///8A0qIA/9KiAP/SogD/////AP///wDSogD/////AP///wD///8A0qIA/9KiAP////8A0qIA/+TIapT///8A////AP///wD///8A1akU6tKiAP/SogD/0qIA/////wD///8A////AOvVjXHSogD/////ANKiAP/SogD/0qIA/9KiAP////8A////AP///wD///8A////ANKiAP/SogD/0qIA/9KiAP/SogD/7NiUav///wDUpw/v0qIA/9KiAP/SogD/0qIA/9SnD+////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////APz57w/SogD/0qIA/9KiAP/SogD/////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A6NB/f9KiAP/SogD/0qIA/9WpFenSogD/0qIA/9KiAP////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wDSogD/0qIA/9KiAP////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A0qIA/9KiAP////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD79+oU0qIA/9KiAP/SogD/////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////ANmxKtTz578/////AP///wD///8A////AP///wD///8A//8AAPyPAAD9DwAA+QcAAPkTAAD4GQAA8bkAADw9AAAPgwAAA/8AAPh/AAD/gAAA//EAAP+fAAD/HwAA/38AAA==
+"""
 
 if profile is None:
-    print(f'[1point] x')
+    print(f'x | image={icon_b64.strip()}')
     print('---')
-    print(f'{now.isoformat()} ')
+    print(f'Error')
 else:
-    print(f'[1point] {profile.point}')
+    print(f'{profile.point} | image={icon_b64.strip()}')
     print('---')
-    print(f'{now.isoformat()} ')
     print(f'| image={profile.day_question.decode("utf-8")} href={MAIN_URL}')
