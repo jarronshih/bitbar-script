@@ -26,24 +26,26 @@ def login_with_cookies(username, raw_cookies):
     profile = None
 
     # Login with cookies
-    content = ''
     try:
         cookies = SimpleCookie()
         cookies.load(raw_cookies)
-        result = session_requests.get(MAIN_URL, cookies={k: v.value for k, v in cookies.items()})
-        content = result.text
+        cookies = {k: v.value for k, v in cookies.items()}
+        result = session_requests.get(MAIN_URL, cookies=cookies)
 
         if username not in result.text:
             return None
+        result = session_requests.get("https://www.1point3acres.com/bbs/home.php?mod=spacecp&ac=credit&showcredit=1", cookies=cookies)
 
         profile = Profile()
-        m = re.findall(r'积分: (\d+)', content)
+        m = re.findall(r'积分: (\d+)', result.text)
         profile.point = int(m[0])
 
         soup = BeautifulSoup(result.text, features="html.parser")
-        a = soup.find('a', href="plugin.php?id=ahome_dayquestion:index")
+
+        a = soup.find('a', onclick="showWindow('pop','plugin.php?id=ahome_dayquestion:pop')")
         if not a:
-            a = soup.find('a', onclick="showWindow('pop','plugin.php?id=ahome_dayquestion:pop')")
+            a = soup.find('a', href="plugin.php?id=ahome_dayquestion:index")
+
         image_url = a.img.attrs['src']
         profile.day_question = base64.b64encode(session_requests.get(urljoin(MAIN_URL, image_url)).content)
         return profile
