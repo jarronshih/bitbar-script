@@ -63,7 +63,7 @@ def bitbar_menu():
         print(f'x | image={icon_b64.strip()}')
         print('---')
         print(f'Error')
-        print(f'{repr(profile.error)}')
+        print(f'--{repr(profile.error)}')
     else:
         print(f' | image={icon_b64.strip()}')
         print('---')
