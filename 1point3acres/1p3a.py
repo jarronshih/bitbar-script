@@ -10,13 +10,16 @@ from dataclasses import dataclass
 
 
 MAIN_URL = 'https://www.1point3acres.com/bbs/'
+PROFILE_URL = "https://www.1point3acres.com/bbs/home.php?mod=spacecp&ac=credit&showcredit=1"
+DAY_QUESTION_URL = 'https://www.1point3acres.com/bbs/plugin.php?id=ahome_dayquestion:pop&infloat=yes&handlekey=pop&inajax=1&ajaxtarget=fwin_content_pop'
 
 
 @dataclass
 class Profile:
     username: str = ''
     point: int = 0
-    day_question: bytes = bytes()
+    day_question_status: bytes = bytes()
+    day_question: str = None
     error: Exception = None
 
 
@@ -34,17 +37,26 @@ def login_with_cookies(username, raw_cookies):
 
         if username not in result.text:
             return None
-        result = session_requests.get("https://www.1point3acres.com/bbs/home.php?mod=spacecp&ac=credit&showcredit=1", cookies=cookies)
+        result = session_requests.get(PROFILE_URL, cookies=cookies)
 
         # Parse point
         m = re.findall(r'积分: (\d+)', result.text)
         profile.point = int(m[0])
 
-        # Parse answer
+        # Parse day question status
         soup = BeautifulSoup(result.text, features="html.parser")
         img = soup.find('img', src=re.compile("source/plugin/ahome_dayquestion/images/.*"))
         image_url = img.attrs['src']
-        profile.day_question = base64.b64encode(session_requests.get(urljoin(MAIN_URL, image_url)).content)
+        profile.day_question_status = base64.b64encode(session_requests.get(urljoin(MAIN_URL, image_url)).content)
+
+        # Parse day question
+        result = session_requests.get(DAY_QUESTION_URL, cookies=cookies)
+        if '参加过答题' not in result.text:
+            # TODO
+            html = result.text
+            print(html)
+            profile.day_question = html
+
         return profile
 
     except Exception as e:
@@ -68,7 +80,10 @@ def bitbar_menu():
         print(f' | image={icon_b64.strip()}')
         print('---')
         print(f'{profile.point}')
-        print(f'| image={profile.day_question.decode("utf-8")} href={MAIN_URL}')
+        print(f'| image={profile.day_question_status.decode("utf-8")} href={MAIN_URL}')
+        if profile.day_question:
+            print('Day Question')
+            print(f'--{profile.day_question}')
 
 
 if __name__ == "__main__":
