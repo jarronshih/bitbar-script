@@ -1,4 +1,5 @@
-
+## Install env
+pipenv install
 
 ## Configure the cred
 Create file `local_settings.py` and add `username` and `raw_cookies` inside.
