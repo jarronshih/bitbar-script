@@ -15,7 +15,9 @@ PROFILE_URL = (
     "https://www.1point3acres.com/bbs/home.php?mod=spacecp&ac=credit&showcredit=1"
 )
 DAY_QUESTION_URL = "https://www.1point3acres.com/bbs/plugin.php?id=ahome_dayquestion:pop&infloat=yes&handlekey=pop&inajax=1&ajaxtarget=fwin_content_pop"
-DAY_QUESTION_POST_URL = "https://www.1point3acres.com/bbs/plugin.php?id=ahome_dayquestion:pop"
+DAY_QUESTION_POST_URL = (
+    "https://www.1point3acres.com/bbs/plugin.php?id=ahome_dayquestion:pop"
+)
 CHECKIN_URL = "https://www.1point3acres.com/bbs/plugin.php?id=dsu_paulsign:sign"
 CHECKIN_POST_URL = "https://www.1point3acres.com/bbs/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=0&inajax=0"
 
@@ -25,7 +27,8 @@ AAABAAEAEBAAAAAAAABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA
 
 DAY_QUESTIONS = [
     ("下面哪个州，没有state income tax", ("New Hampshire", "Florida")),
-    ("下面哪种行为，在地里会被扣光积分，甚至封号", ("这些全都会", )),
+    ("下面哪种行为，在地里会被扣光积分，甚至封号", ("这些全都会",)),
+    ("下面哪类版块，可以拉群，而且不会被警告扣分", ("学友工友、找室友或者版聚本地",)),
 ]
 
 
@@ -62,7 +65,9 @@ def login_with_cookies(username, raw_cookies):
         cookies = SimpleCookie()
         cookies.load(raw_cookies)
         cookies = {k: v.value for k, v in cookies.items()}
-        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
+        }
         result = session_requests.get(MAIN_URL, cookies=cookies)
 
         if username not in result.text:
@@ -77,16 +82,18 @@ def login_with_cookies(username, raw_cookies):
         if "签到领奖" in result.text:
             result = session_requests.get(CHECKIN_URL, cookies=cookies, headers=headers)
             soup = BeautifulSoup(result.text, features="html.parser")
-            formhash = soup.find('input', {"name": "formhash"})
-            qdxq = soup.find('ul', {'class': "qdsmile"}).find("input", {"name": "qdxq"})
+            formhash = soup.find("input", {"name": "formhash"})
+            qdxq = soup.find("ul", {"class": "qdsmile"}).find("input", {"name": "qdxq"})
             data = {
-                'formhash': formhash.attrs["value"],
-                'qdxq': qdxq.attrs["value"],
-                'qdmode': 2,
-                'todaysay': '',
-                'fastreply': 1
+                "formhash": formhash.attrs["value"],
+                "qdxq": qdxq.attrs["value"],
+                "qdmode": 2,
+                "todaysay": "",
+                "fastreply": 1,
             }
-            response = requests.post(CHECKIN_POST_URL, data=data, cookies=cookies, headers=headers)
+            response = requests.post(
+                CHECKIN_POST_URL, data=data, cookies=cookies, headers=headers
+            )
             # assert '签到成功' in response.text
 
         # Parse day question status
@@ -100,7 +107,9 @@ def login_with_cookies(username, raw_cookies):
         )
 
         # Parse day question
-        result = session_requests.get(DAY_QUESTION_URL, cookies=cookies, headers=headers)
+        result = session_requests.get(
+            DAY_QUESTION_URL, cookies=cookies, headers=headers
+        )
         if "参加过答题" not in result.text:
             # print(result.text)
             soup = BeautifulSoup(result.text, features="html.parser")
@@ -120,11 +129,18 @@ def login_with_cookies(username, raw_cookies):
                     # Submit answer
                     #  - <input type="hidden" name="formhash" value="4c1c91f5">
                     #  - <input type="radio" id="a1" name="answer" value="1">
-                    # formhash = soup.find('input', {"name": "formhash"})
-                    # response = requests.post(DAY_QUESTION_POST_URL, data={
-                    #     'formhash': formhash.attrs["value"],
-                    #     'answer': answer_value
-                    # }, cookies=cookies, headers=headers)
+                    formhash = soup.find("input", {"name": "formhash"})
+                    data = {
+                        "formhash": formhash.attrs["value"],
+                        "answer": answer_value,
+                        "submit": True,
+                    }
+                    # response = requests.post(
+                    #     DAY_QUESTION_POST_URL,
+                    #     data=data,
+                    #     cookies=cookies,
+                    #     headers=headers,
+                    # )
 
         return profile
 
