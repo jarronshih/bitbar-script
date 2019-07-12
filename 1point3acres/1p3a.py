@@ -86,7 +86,7 @@ def login_with_cookies(username, raw_cookies):
                 'todaysay': '',
                 'fastreply': 1
             }
-            response = requests.post(CHECKIN_URL, data=data, cookies=cookies, headers=headers)
+            response = requests.post(CHECKIN_POST_URL, data=data, cookies=cookies, headers=headers)
             # assert '签到成功' in response.text
 
         # Parse day question status
