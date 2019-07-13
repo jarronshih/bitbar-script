@@ -29,6 +29,7 @@ DAY_QUESTIONS = [
     ("下面哪个州，没有state income tax", ("New Hampshire", "Florida")),
     ("下面哪种行为，在地里会被扣光积分，甚至封号", ("这些全都会",)),
     ("下面哪类版块，可以拉群，而且不会被警告扣分", ("学友工友、找室友或者版聚本地",)),
+    ("一亩三分地是哪年创立的", ("2009",)),
 ]
 
 
@@ -135,12 +136,13 @@ def login_with_cookies(username, raw_cookies):
                         "answer": answer_value,
                         "submit": True,
                     }
-                    # response = requests.post(
-                    #     DAY_QUESTION_POST_URL,
-                    #     data=data,
-                    #     cookies=cookies,
-                    #     headers=headers,
-                    # )
+                    response = requests.post(
+                        DAY_QUESTION_POST_URL,
+                        data=data,
+                        cookies=cookies,
+                        headers=headers,
+                    )
+                    # assert '???' in response.text
 
         return profile
 
