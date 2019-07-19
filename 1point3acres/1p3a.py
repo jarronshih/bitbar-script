@@ -26,10 +26,15 @@ AAABAAEAEBAAAAAAAABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA
 """.strip()
 
 DAY_QUESTIONS = [
-    ("下面哪个州，没有state income tax", ("New Hampshire", "Florida")),
+    ("下面哪个州，没有state income tax", ("New Hampshire", "Florida", "Alaska", "Nevada", "South Dakota", "Texas", "Washington", "Wyoming")),
     ("下面哪种行为，在地里会被扣光积分，甚至封号", ("这些全都会",)),
     ("下面哪类版块，可以拉群，而且不会被警告扣分", ("学友工友、找室友或者版聚本地",)),
     ("一亩三分地是哪年创立的", ("2009",)),
+    ("下面哪个大学不在Virginia/DC附近", ("Washington and Jefferson College",)),
+    ("下面哪所大学所在城市不是波士顿", ("Boston College",)),
+    ("下面哪种情况，管理员会按照你的要求，进行删帖", ("这些情况全都不删帖！",)),
+    ("地里发帖可以隐藏内容", ("[hide=200]想要隐藏的内容[/hide]",)),
+    # ("", ("",)),
 ]
 
 
