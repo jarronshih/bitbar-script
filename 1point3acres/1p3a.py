@@ -54,7 +54,8 @@ def day_question_answer(question, options):
                         return (option, parse_option(option))
 
     # Search by google
-    # return max(options, key=lambda option: googlesearch.hits(f'{question} {option.text}'))
+    # option = max(options, key=lambda option: googlesearch.hits(f'{question} {option.text}'))
+    # return (option, parse(option))
 
     return (None, None)
 
