@@ -3,6 +3,7 @@ import requests
 import re
 import base64
 import bs4
+import googlesearch
 from bs4 import BeautifulSoup
 from http.cookies import SimpleCookie
 from urllib.parse import urljoin
@@ -44,12 +45,17 @@ def parse_option(option_soup):
 
 
 def day_question_answer(question, options):
+    # Search from db
     for q, a in DAY_QUESTIONS:
         if q in question:
             for aa in a:
                 for option in options:
                     if aa in option.text:
                         return (option, parse_option(option))
+
+    # Search by google
+    # return max(options, key=lambda option: googlesearch.hits(f'{question} {option.text}'))
+
     return (None, None)
 
 
