@@ -54,9 +54,13 @@ def day_question_answer(question, options):
                         return (option, parse_option(option))
 
     # Search by google
-    # option = max(options, key=lambda option: googlesearch.hits(f'{question} {option.text}'))
-    # return (option, parse(option))
-
+    # if '不' in question:
+    #     func = min
+    # else:
+    #     func = max
+    # option = func(options, key=lambda option: googlesearch.hits(f'{question} {option.text}'))
+    #
+    # return (option, parse_option(option))
     return (None, None)
 
 
