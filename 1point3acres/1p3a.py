@@ -1,4 +1,6 @@
 #!/usr/bin/env PYTHONIOENCODING=UTF-8 /usr/local/bin/python3
+# Credit: https://github.com/yo1995/Daily_Python_Tasks/blob/master/Checkin_1point3acres/yimu-py3.py
+
 import requests
 import re
 import base64
@@ -31,7 +33,8 @@ DAY_QUESTIONS = [
     ("下面几个州，哪个离美国首都最远", ("North Carolina",)),
     ("下面哪个专业，不是STEM，OPT没法延期？", ("教育学",)),
     ("下面哪个大学不在Virginia/DC附近", ("Washington and Jefferson College",)),
-    ("下面哪个州，没有state income tax", ("New Hampshire", "Florida", "Alaska", "Nevada", "South Dakota", "Texas", "Washington", "Wyoming")),
+    ("下面哪个州，没有state income tax", ("New Hampshire", "Florida", "Alaska", "Nevada", "South Dakota", "Texas", "Washington", "Wyoming", "Tennessee")),
+    # ("下面哪个州，有state income tax on wages", ("",)),
     ("下面哪所大学所在城市不是波士顿", ("Boston College",)),
     ("下面哪种情况，管理员会按照你的要求，进行删帖", ("这些情况全都不删帖！",)),
     ("下面哪种行为，在地里会被扣光积分，甚至封号", ("这些全都会",)),
@@ -39,6 +42,10 @@ DAY_QUESTIONS = [
     ("哪种选校策略最合理", ("根据自己下一步职业和学业目标，参考地里数据和成功率，认真斟酌",)),
     ("回答别人的私信提问还需要消耗我5大米怎么办", ("直接在版面回答，这样大家都能看见",)),
     ("地里发帖可以隐藏内容", ("[hide=200]想要隐藏的内容[/hide]",)),
+
+    ("以下哪个美国城市不靠海", ("亚特兰大",)),
+    ("音乐家贝多芬出生于哪国", ("德国",)),
+    ("下面哪种行为，在地里会被扣光积分，甚至封号", ("这些全都会",)),
     # ("", ("",)),
 ]
 
@@ -87,9 +94,13 @@ def login_with_cookies(username, raw_cookies):
         cookies.load(raw_cookies)
         cookies = {k: v.value for k, v in cookies.items()}
         headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
+            'Host': 'www.1point3acres.com',
+            'Cache-Control': 'max-age=0',
+            'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
         }
-        result = session_requests.get(MAIN_URL, cookies=cookies)
+        result = session_requests.get(MAIN_URL, cookies=cookies, headers=headers)
 
         if username not in result.text:
             return None
@@ -124,7 +135,7 @@ def login_with_cookies(username, raw_cookies):
         )
         image_url = img.attrs["src"]
         profile.day_question_status = base64.b64encode(
-            session_requests.get(urljoin(MAIN_URL, image_url)).content
+            session_requests.get(urljoin(MAIN_URL, image_url), cookies=cookies, headers=headers).content
         )
 
         # Parse day question
